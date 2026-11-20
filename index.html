@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183c38">
+  <meta name="description" content="Тренажёр экзамена по психологии управления: 40 вопросов из 10 лекций.">
+  <title>Экзаменатор — психология управления</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="questions.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="Экзаменатор — на главную">
+      <span class="brand-mark" aria-hidden="true">Э</span>
+      <span class="brand-name">ЭКЗАМЕНАТОР</span>
+    </a>
+    <span class="header-course">Психология управления</span>
+  </header>
+
+  <main class="page-shell">
+    <section class="intro-panel" id="intro">
+      <div class="intro-copy">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> ТРЕНАЖЁР К ЭКЗАМЕНУ</p>
+        <h1>Проверь, насколько<br>ты готов <em>к экзамену.</em></h1>
+        <p class="intro-description">Каждая попытка выбирает случайные 40 из 400 вопросов — по четыре из каждой из 10 лекций. После завершения ты увидишь результат и объяснения со ссылками на источники.</p>
+        <button class="button button-primary button-start" id="start-button" type="button">
+          Начать экзамен <span aria-hidden="true">→</span>
+        </button>
+        <p class="privacy-note">Без регистрации · Работает локально · Ответы основаны на лекциях</p>
+      </div>
+      <div class="intro-aside" aria-label="Формат экзамена">
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+        <div class="intro-aside-content">
+          <span class="aside-label">ФОРМАТ</span>
+          <div class="big-number">40<span> вопросов</span></div>
+          <div class="aside-divider"></div>
+          <div class="format-row"><span class="format-icon">A–D</span><span>4 варианта ответа</span></div>
+          <div class="format-row"><span class="format-icon">10</span><span>темы всех лекций</span></div>
+          <div class="format-row"><span class="format-icon">↗</span><span>разбор после попытки</span></div>
+        </div>
+        <span class="aside-decoration" aria-hidden="true">40</span>
+      </div>
+    </section>
+
+    <section class="exam-view is-hidden" id="exam" aria-labelledby="question-text">
+      <div class="exam-topbar">
+        <div>
+          <p class="eyebrow"><span class="eyebrow-dot"></span> ЭКЗАМЕН · ПСИХОЛОГИЯ УПРАВЛЕНИЯ</p>
+          <h1 class="exam-title">Работай в своём темпе</h1>
+        </div>
+        <button class="text-button" id="exit-button" type="button">Завершить попытку</button>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-meta">
+          <span id="progress-label">Вопрос 1 из 40</span>
+          <span id="answered-label">Отвечено: 0 из 40</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-label="Прогресс экзамена" aria-valuemin="0" aria-valuemax="40" aria-valuenow="0" id="progress-bar">
+          <span class="progress-fill" id="progress-fill"></span>
+        </div>
+      </div>
+
+      <div class="exam-layout">
+        <aside class="question-sidebar" aria-label="Навигация по вопросам">
+          <div class="sidebar-heading">
+            <span class="sidebar-title">ВОПРОСЫ</span>
+            <span class="sidebar-count">40</span>
+          </div>
+          <div class="question-grid" id="question-grid"></div>
+          <div class="legend">
+            <span><i class="legend-dot legend-current"></i> Текущий</span>
+            <span><i class="legend-dot legend-answered"></i> Отвечен</span>
+          </div>
+          <div class="sidebar-tip">
+            <span class="tip-icon" aria-hidden="true">i</span>
+            <p>Порядок вопросов и вариантов меняется при каждом запуске.</p>
+          </div>
+        </aside>
+
+        <section class="question-card" aria-live="polite">
+          <div class="question-meta">
+            <span class="lecture-tag" id="lecture-tag">Лекция 1</span>
+            <span class="question-number" id="question-number">ВОПРОС 01</span>
+          </div>
+          <h2 class="question-text" id="question-text"></h2>
+          <p class="select-hint">Выбери один вариант ответа</p>
+          <div class="answer-list" id="answer-list" role="radiogroup" aria-labelledby="question-text"></div>
+          <div class="question-actions">
+            <button class="button button-secondary" id="previous-button" type="button">
+              <span aria-hidden="true">←</span> Назад
+            </button>
+            <button class="button button-next" id="next-button" type="button">
+              Следующий вопрос <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="results-view is-hidden" id="results" aria-labelledby="results-title">
+      <div class="results-hero">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> ЭКЗАМЕН ЗАВЕРШЁН</p>
+        <h1 id="results-title">Твой результат</h1>
+        <p class="result-message" id="result-message"></p>
+        <div class="score-row">
+          <div class="score-ring" id="score-ring">
+            <div class="score-ring-inner">
+              <strong id="score-percent">0%</strong>
+              <span>результат</span>
+            </div>
+          </div>
+          <div class="score-details">
+            <div><strong id="score-correct">0</strong><span>правильных ответов</span></div>
+            <div><strong id="score-incorrect">0</strong><span>ошибок или пропусков</span></div>
+            <div><strong>40</strong><span>вопросов в попытке</span></div>
+          </div>
+        </div>
+        <button class="button button-primary" id="restart-button" type="button">Пройти ещё раз <span aria-hidden="true">↻</span></button>
+      </div>
+
+      <div class="review-section">
+        <div class="review-heading">
+          <div>
+            <p class="eyebrow">РАЗБОР ОТВЕТОВ</p>
+            <h2>Что стоит повторить</h2>
+          </div>
+          <label class="filter-label" for="review-filter">Показать
+            <select id="review-filter">
+              <option value="all">все вопросы</option>
+              <option value="incorrect">только ошибки</option>
+            </select>
+          </label>
+        </div>
+        <div class="review-list" id="review-list"></div>
+      </div>
+    </section>
+
+    <dialog class="finish-dialog" id="finish-dialog" aria-labelledby="dialog-title">
+      <div class="dialog-icon" aria-hidden="true">?</div>
+      <h2 id="dialog-title">Завершить экзамен?</h2>
+      <p id="dialog-message"></p>
+      <div class="dialog-actions">
+        <button class="button button-secondary" id="continue-button" type="button">Продолжить</button>
+        <button class="button button-primary" id="confirm-finish-button" type="button">Завершить</button>
+      </div>
+    </dialog>
+  </main>
+
+  <footer class="site-footer">
+    <span>ЭКЗАМЕНАТОР <span class="footer-separator">/</span> ПСИХОЛОГИЯ УПРАВЛЕНИЯ</span>
+    <span>Содержание ответов — только из файлов лекций</span>
+  </footer>
+</body>
+</html>
