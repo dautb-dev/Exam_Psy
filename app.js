@@ -56,12 +56,23 @@
         question.lecture > 10 ||
         !question.prompt ||
         !question.answer ||
+        !Array.isArray(question.distractors) ||
+        question.distractors.length !== 3 ||
+        question.distractors.some((distractor) => typeof distractor !== "string" || !distractor.trim()) ||
         !question.explanation ||
         !question.file ||
         !Number.isInteger(question.page) ||
         question.page < 1
       ) {
         return "В банке есть вопрос с пропущенными или некорректными данными.";
+      }
+      const answerKeys = new Set([question.answer.trim().toLocaleLowerCase("ru")]);
+      for (const distractor of question.distractors) {
+        const distractorKey = distractor.trim().toLocaleLowerCase("ru");
+        if (answerKeys.has(distractorKey)) {
+          return `У вопроса №${question.sourceQuestion} повторяются правильный ответ и варианты.`;
+        }
+        answerKeys.add(distractorKey);
       }
       seenQuestions.add(question.sourceQuestion);
       countsByLecture[question.lecture - 1] += 1;
@@ -186,33 +197,9 @@
       const lectureQuestions = questionBank.filter((question) => question.lecture === lecture);
       const selectedForLecture = shuffle(lectureQuestions).slice(0, questionCountPerLecture);
       selectedForLecture.forEach((question) => {
-        const answerKey = question.answer.trim().toLocaleLowerCase("ru");
-        const candidates = shuffle(questionBank.filter((candidate) =>
-          candidate.lecture === question.lecture &&
-          candidate.sourceQuestion !== question.sourceQuestion
-        )).sort((left, right) =>
-          Math.abs(left.page - question.page) - Math.abs(right.page - question.page)
-        );
-        const distractors = [];
-        const seenAnswers = new Set([answerKey]);
-        for (const candidate of candidates) {
-          const candidateAnswerKey = candidate.answer.trim().toLocaleLowerCase("ru");
-          if (seenAnswers.has(candidateAnswerKey)) {
-            continue;
-          }
-          seenAnswers.add(candidateAnswerKey);
-          distractors.push(candidate.answer);
-          if (distractors.length === 3) {
-            break;
-          }
-        }
-
-        if (distractors.length !== 3) {
-          throw new Error(`Для вопроса №${question.sourceQuestion} не удалось подобрать три уникальных варианта.`);
-        }
         attempt.push({
           ...question,
-          options: shuffle([question.answer, ...distractors])
+          options: shuffle([question.answer, ...question.distractors])
         });
       });
     }
