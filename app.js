@@ -187,16 +187,25 @@
       const selectedForLecture = shuffle(lectureQuestions).slice(0, questionCountPerLecture);
       selectedForLecture.forEach((question) => {
         const answerKey = question.answer.trim().toLocaleLowerCase("ru");
-        const distractors = Array.from(new Map(
-          shuffle(questionBank.filter((candidate) =>
-            candidate.lecture === question.lecture &&
-            candidate.sourceQuestion !== question.sourceQuestion &&
-            candidate.answer.trim().toLocaleLowerCase("ru") !== answerKey
-          )).map((candidate) => [
-            candidate.answer.trim().toLocaleLowerCase("ru"),
-            candidate.answer
-          ])
-        ).values()).slice(0, 3);
+        const candidates = shuffle(questionBank.filter((candidate) =>
+          candidate.lecture === question.lecture &&
+          candidate.sourceQuestion !== question.sourceQuestion
+        )).sort((left, right) =>
+          Math.abs(left.page - question.page) - Math.abs(right.page - question.page)
+        );
+        const distractors = [];
+        const seenAnswers = new Set([answerKey]);
+        for (const candidate of candidates) {
+          const candidateAnswerKey = candidate.answer.trim().toLocaleLowerCase("ru");
+          if (seenAnswers.has(candidateAnswerKey)) {
+            continue;
+          }
+          seenAnswers.add(candidateAnswerKey);
+          distractors.push(candidate.answer);
+          if (distractors.length === 3) {
+            break;
+          }
+        }
 
         if (distractors.length !== 3) {
           throw new Error(`Для вопроса №${question.sourceQuestion} не удалось подобрать три уникальных варианта.`);
