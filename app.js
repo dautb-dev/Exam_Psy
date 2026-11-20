@@ -12,6 +12,7 @@
   const questionNumber = document.querySelector("#question-number");
   const lectureTag = document.querySelector("#lecture-tag");
   const answerList = document.querySelector("#answer-list");
+  const answerFeedback = document.querySelector("#answer-feedback");
   const progressLabel = document.querySelector("#progress-label");
   const answeredLabel = document.querySelector("#answered-label");
   const progressBar = document.querySelector("#progress-bar");
@@ -138,6 +139,46 @@
     });
   }
 
+  function renderAnswerFeedback(question) {
+    const hasAnswered = answers.has(question.sourceQuestion);
+    const selectedAnswer = answers.get(question.sourceQuestion);
+    const isCorrect = hasAnswered && selectedAnswer === question.answer;
+
+    answerList.querySelectorAll(".answer-option").forEach((item) => {
+      const option = item.querySelector("input").value;
+      const isSelected = selectedAnswer === option;
+      item.classList.toggle("is-selected", isSelected);
+      item.classList.toggle("is-correct", hasAnswered && option === question.answer);
+      item.classList.toggle("is-incorrect", isSelected && option !== question.answer);
+    });
+
+    answerFeedback.replaceChildren();
+    answerFeedback.classList.toggle("is-hidden", !hasAnswered);
+    answerFeedback.classList.toggle("is-correct", isCorrect);
+    answerFeedback.classList.toggle("is-incorrect", hasAnswered && !isCorrect);
+    if (!hasAnswered) {
+      return;
+    }
+
+    const status = document.createElement("p");
+    status.className = "answer-feedback-status";
+    status.textContent = isCorrect ? "Верно!" : "Неверно";
+
+    const correctAnswer = document.createElement("p");
+    correctAnswer.className = "answer-feedback-answer";
+    correctAnswer.append(document.createTextNode("Правильный ответ: "));
+    const correctText = document.createElement("strong");
+    correctText.textContent = question.answer;
+    correctAnswer.append(correctText);
+
+    const explanation = document.createElement("p");
+    explanation.className = "answer-feedback-explanation";
+    explanation.append(document.createTextNode("Объяснение: "));
+    explanation.append(document.createTextNode(question.explanation));
+
+    answerFeedback.append(status, correctAnswer, explanation);
+  }
+
   function renderQuestion() {
     const question = attempt[currentIndex];
     questionNumber.textContent = `ВОПРОС ${String(currentIndex + 1).padStart(2, "0")}`;
@@ -148,7 +189,6 @@
     question.options.forEach((option, optionIndex) => {
       const label = document.createElement("label");
       label.className = "answer-option";
-      label.classList.toggle("is-selected", answers.get(question.sourceQuestion) === option);
 
       const input = document.createElement("input");
       input.type = "radio";
@@ -158,9 +198,7 @@
       input.setAttribute("aria-label", `Вариант ${String.fromCharCode(65 + optionIndex)}: ${option}`);
       input.addEventListener("change", () => {
         answers.set(question.sourceQuestion, option);
-        answerList.querySelectorAll(".answer-option").forEach((item) => {
-          item.classList.toggle("is-selected", item.querySelector("input").checked);
-        });
+        renderAnswerFeedback(question);
         updateProgress();
       });
 
@@ -170,6 +208,7 @@
       label.append(input, text);
       answerList.append(label);
     });
+    renderAnswerFeedback(question);
 
     previousButton.disabled = currentIndex === 0;
     nextButton.replaceChildren();

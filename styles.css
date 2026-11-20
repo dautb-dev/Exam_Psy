@@ -586,6 +586,17 @@ select:focus-visible {
   box-shadow: 0 0 0 2px rgba(93, 138, 105, 0.1);
 }
 
+.answer-option.is-correct {
+  border-color: #7eaa85;
+  background: #f1f7ef;
+}
+
+.answer-option.is-incorrect {
+  border-color: #dc8d82;
+  background: #fff3f0;
+  box-shadow: 0 0 0 2px rgba(220, 141, 130, 0.1);
+}
+
 .answer-option input {
   width: 16px;
   height: 16px;
@@ -597,6 +608,42 @@ select:focus-visible {
 .answer-text {
   font-size: 13px;
   line-height: 1.55;
+}
+
+.answer-feedback {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid #cfe0cc;
+  border-radius: 11px;
+  background: #f5faf2;
+  color: #31443e;
+}
+
+.answer-feedback.is-incorrect {
+  border-color: #ecd0c9;
+  background: #fff6f3;
+}
+
+.answer-feedback-status {
+  margin: 0;
+  color: var(--good);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.answer-feedback.is-incorrect .answer-feedback-status {
+  color: var(--bad);
+}
+
+.answer-feedback-answer,
+.answer-feedback-explanation {
+  margin: 7px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.answer-feedback-answer strong {
+  color: #31443e;
 }
 
 .question-actions {
