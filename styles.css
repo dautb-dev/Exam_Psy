@@ -157,6 +157,60 @@ button {
   line-height: 1.75;
 }
 
+.exam-mode-picker {
+  display: grid;
+  gap: 8px;
+  margin: 22px 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.exam-mode-picker legend {
+  margin-bottom: 9px;
+  color: #31443e;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.exam-mode-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 12px 14px;
+  border: 1px solid #e2e9df;
+  border-radius: 11px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.exam-mode-option:hover,
+.exam-mode-option:focus-within {
+  border-color: #9ab59a;
+  background: #f8faf6;
+}
+
+.exam-mode-option input {
+  flex: 0 0 auto;
+  margin: 3px 0 0;
+  accent-color: #3c7457;
+}
+
+.exam-mode-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.exam-mode-copy strong {
+  color: #31443e;
+  font-size: 12px;
+}
+
+.exam-mode-copy span {
+  color: #687670;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
 .button {
   min-height: 48px;
   display: inline-flex;
@@ -197,6 +251,12 @@ select:focus-visible {
   min-height: 54px;
   margin-top: 28px;
   padding-inline: 24px;
+}
+
+.exam-mode-label {
+  margin: 8px 0 0;
+  color: #78877c;
+  font-size: 11px;
 }
 
 .button-start span,
@@ -780,6 +840,12 @@ select:focus-visible {
 
 .results-hero .button-primary:hover {
   background: #e3f4b8;
+}
+
+.results-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .review-section {

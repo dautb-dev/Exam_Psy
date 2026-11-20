@@ -4,6 +4,8 @@
   const expectedQuestionCount = 40;
   const questionCountPerLecture = 4;
   const startButton = document.querySelector("#start-button");
+  const examModeInputs = Array.from(document.querySelectorAll('input[name="exam-mode"]'));
+  const examModeLabel = document.querySelector("#exam-mode-label");
   const introView = document.querySelector("#intro");
   const examView = document.querySelector("#exam");
   const resultsView = document.querySelector("#results");
@@ -23,10 +25,12 @@
   const dialogMessage = document.querySelector("#dialog-message");
   const reviewFilter = document.querySelector("#review-filter");
   const reviewList = document.querySelector("#review-list");
+  const changeModeButton = document.querySelector("#change-mode-button");
 
   let attempt = [];
   let answers = new Map();
   let currentIndex = 0;
+  let showImmediateFeedback = true;
 
   function shuffle(items) {
     const shuffled = [...items];
@@ -142,21 +146,22 @@
   function renderAnswerFeedback(question) {
     const hasAnswered = answers.has(question.sourceQuestion);
     const selectedAnswer = answers.get(question.sourceQuestion);
-    const isCorrect = hasAnswered && selectedAnswer === question.answer;
+    const shouldReveal = showImmediateFeedback && hasAnswered;
+    const isCorrect = shouldReveal && selectedAnswer === question.answer;
 
     answerList.querySelectorAll(".answer-option").forEach((item) => {
       const option = item.querySelector("input").value;
       const isSelected = selectedAnswer === option;
       item.classList.toggle("is-selected", isSelected);
-      item.classList.toggle("is-correct", hasAnswered && option === question.answer);
-      item.classList.toggle("is-incorrect", isSelected && option !== question.answer);
+      item.classList.toggle("is-correct", shouldReveal && option === question.answer);
+      item.classList.toggle("is-incorrect", shouldReveal && isSelected && option !== question.answer);
     });
 
     answerFeedback.replaceChildren();
-    answerFeedback.classList.toggle("is-hidden", !hasAnswered);
+    answerFeedback.classList.toggle("is-hidden", !shouldReveal);
     answerFeedback.classList.toggle("is-correct", isCorrect);
-    answerFeedback.classList.toggle("is-incorrect", hasAnswered && !isCorrect);
-    if (!hasAnswered) {
+    answerFeedback.classList.toggle("is-incorrect", shouldReveal && !isCorrect);
+    if (!shouldReveal) {
       return;
     }
 
@@ -229,6 +234,15 @@
   }
 
   function startExam() {
+    const selectedMode = examModeInputs.find((input) => input.checked);
+    if (!selectedMode) {
+      throw new Error("Выберите режим прохождения экзамена.");
+    }
+    showImmediateFeedback = selectedMode.value === "study";
+    examModeLabel.textContent = showImmediateFeedback
+      ? "Режим обучения · ответы сразу"
+      : "Режим экзамена · без подсказок";
+
     answers = new Map();
     currentIndex = 0;
     attempt = [];
@@ -382,5 +396,10 @@
     completeExam();
   });
   document.querySelector("#restart-button").addEventListener("click", startExam);
+  changeModeButton.addEventListener("click", () => {
+    resultsView.classList.add("is-hidden");
+    introView.classList.remove("is-hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
   reviewFilter.addEventListener("change", renderReview);
 })();

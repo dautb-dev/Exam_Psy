@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#183c38">
   <meta name="description" content="Тренажёр экзамена по психологии управления: 40 вопросов из 10 лекций.">
   <title>Экзаменатор — психология управления</title>
-  <link rel="stylesheet" href="styles.css?v=91a9e12">
-  <script src="questions.js?v=91a9e12" defer></script>
-  <script src="app.js?v=91a9e12" defer></script>
+  <link rel="stylesheet" href="styles.css?v=exam-modes-20261120">
+  <script src="questions.js?v=exam-modes-20261120" defer></script>
+  <script src="app.js?v=exam-modes-20261120" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -25,6 +25,23 @@
         <p class="eyebrow"><span class="eyebrow-dot"></span> ТРЕНАЖЁР К ЭКЗАМЕНУ</p>
         <h1>Проверь, насколько<br>ты готов <em>к экзамену.</em></h1>
         <p class="intro-description">Каждая попытка выбирает случайные 40 из 400 вопросов — по четыре из каждой из 10 лекций. После завершения ты увидишь результат и объяснения со ссылками на источники.</p>
+        <fieldset class="exam-mode-picker">
+          <legend>Выбери режим прохождения</legend>
+          <label class="exam-mode-option">
+            <input type="radio" name="exam-mode" value="exam">
+            <span class="exam-mode-copy">
+              <strong>Экзамен</strong>
+              <span>Без подсказок во время попытки. Ответы и объяснения — после завершения.</span>
+            </span>
+          </label>
+          <label class="exam-mode-option">
+            <input type="radio" name="exam-mode" value="study" checked>
+            <span class="exam-mode-copy">
+              <strong>Обучение</strong>
+              <span>Правильный ответ и объяснение показываются сразу после выбора.</span>
+            </span>
+          </label>
+        </fieldset>
         <button class="button button-primary button-start" id="start-button" type="button">
           Начать экзамен <span aria-hidden="true">→</span>
         </button>
@@ -50,6 +67,7 @@
         <div>
           <p class="eyebrow"><span class="eyebrow-dot"></span> ЭКЗАМЕН · ПСИХОЛОГИЯ УПРАВЛЕНИЯ</p>
           <h1 class="exam-title">Работай в своём темпе</h1>
+          <p class="exam-mode-label" id="exam-mode-label"></p>
         </div>
         <button class="text-button" id="exit-button" type="button">Завершить попытку</button>
       </div>
@@ -120,7 +138,10 @@
             <div><strong>40</strong><span>вопросов в попытке</span></div>
           </div>
         </div>
-        <button class="button button-primary" id="restart-button" type="button">Пройти ещё раз <span aria-hidden="true">↻</span></button>
+        <div class="results-actions">
+          <button class="button button-secondary" id="change-mode-button" type="button">Изменить режим</button>
+          <button class="button button-primary" id="restart-button" type="button">Пройти ещё раз <span aria-hidden="true">↻</span></button>
+        </div>
       </div>
 
       <div class="review-section">
